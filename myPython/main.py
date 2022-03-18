@@ -26,7 +26,6 @@ def verifyLogin(name):
 
 
 def deleteEntry():
-
     member_name = input("Podaj login do usunięcia: ")
 
     with open('users.csv', 'r+') as in_file:
@@ -57,12 +56,12 @@ def access(option):
         name = input("Podaj login: ")
         pattern = re.compile(r'')
         while True:
-          password = getpass.getpass("Podaj hasło: ")
-          if(len(password) < 6):
+            password = getpass.getpass("Podaj hasło: ")
+            if (len(password) < 6):
                 print("hasło musi mieć co najmniej 6 znaków")
-          else:
-             print("Poprawne hasło")
-             break
+            else:
+                print("Poprawne hasło")
+                break
         register(name, password)
 
 
@@ -100,7 +99,7 @@ def searchByLogin():
             print(row)
         else:
             print("--------------------------")
-
+            break
 
 def register(name, password):
     with open('users.csv', 'a', newline='') as csvfile:
@@ -131,17 +130,16 @@ def login(name, password):
                 break
             else:
                 print("-------------")
-                # break
+                break
 
         begin()
         access(option)
+
+
 begin()
 access(option)
 
 while success:
-        print(granted)
-        print("JESTEM W WHILE")
-        options()
-
-
-
+    print(granted)
+    print("JESTEM W WHILE")
+    options()
