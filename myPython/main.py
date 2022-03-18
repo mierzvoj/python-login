@@ -4,6 +4,8 @@ import csv
 from csv import writer
 import userlogin
 import userregister
+import re
+import getpass
 
 
 def run():
@@ -47,13 +49,20 @@ def begin():
 def access(option):
     if (option == "log"):
         name = input("Podaj login: ")
-        password = input("Podaj hasło: ")
+        password = getpass.getpass("Podaj hasło: ")
         login(name, password)
 
     else:
         print("Podaj login i hasło, aby się zarejestrować ")
         name = input("Podaj login: ")
-        password = input("Podaj hasło: ")
+        pattern = re.compile(r'')
+        while True:
+          password = getpass.getpass("Podaj hasło: ")
+          if(len(password) < 6):
+                print("hasło musi mieć co najmniej 6 znaków")
+          else:
+             print("Poprawne hasło")
+             break
         register(name, password)
 
 
