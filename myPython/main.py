@@ -22,7 +22,17 @@ def grant():
 
 
 def verifyLogin(name):
-    pass
+    csv_file = csv.reader(open("users.csv", "r"))
+    while True:
+      for row in csv_file:
+        if name == row[0]:
+            error = input("Użytkownik o takim loginie już istnieje, podaj inny login, naciśnij l: ")
+            if error == 'l':
+              print("--------------------------")
+                register()
+        else:
+            print("--------------------------")
+            break
 
 
 def deleteEntry():
@@ -54,6 +64,9 @@ def access(option):
     else:
         print("Podaj login i hasło, aby się zarejestrować ")
         name = input("Podaj login: ")
+
+        verifyLogin(name)
+
         pattern = re.compile(r'')
         while True:
             password = getpass.getpass("Podaj hasło: ")
@@ -100,6 +113,7 @@ def searchByLogin():
         else:
             print("--------------------------")
             break
+
 
 def register(name, password):
     with open('users.csv', 'a', newline='') as csvfile:
