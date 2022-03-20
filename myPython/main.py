@@ -12,27 +12,77 @@ def run():
     if __name__ == '__main__': run()
 
 
-granted = False
+def begin():
+    global option
+    print("Witaj")
+    while True:
+        option = int(input("Zaloguj albo zarejestruj się: 1 lub 2 "))
+        if option in ['1', '2']:
+            break
+        if option == 1:
+            login()
+        else:
+            register()
 
 
-def grant():
-    global granted
-    granted = True
-    return granted
+def register():
+    global islogged
+    pattern = re.compile(r'')
+    print("Podaj login i hasło, aby się zarejestrować ")
+    name = input("Podaj login: ")
+    while True:
+        password = getpass.getpass("Podaj hasło: ")
+        if (len(password) < 6):
+            while True:
+              print("hasło musi mieć co najmniej 6 znaków")
+              password = getpass.getpass("Podaj hasło: ")
+              if(len(password) >= 6):
+                break
+              else:
+                print("hasło musi mieć co najmniej 6 znaków")
+        else:
+            print("Poprawne hasło")
+        break
+    with open('users.csv', 'a', newline='') as csvfile:
+      csv_writer = csv.writer(csvfile)
+      csv_writer.writerow([name, password])
+      csvfile.close()
+      print("Zarejestrowałeś się")
+      islogged = True
+    options()
 
 
-def verifyLogin(name):
+def login():
+    print("tu login")
+    global islogged
+    islogged = False
+    name = input("Podaj login: ")
+    password = getpass.getpass("Podaj hasło: ")
+    with open('users.csv', 'r') as csvfile:
+        csv_reader = csv.reader(csvfile)
+        for row in csv_reader:
+            if row[0] == name and row[1] == password:
+                csvfile.close()
+                print("Zalogowałeś się")
+                islogged = True
+                options()
+                break
+            else:
+                print("Błędny login lub hasło")
+                begin()
+
+
+def verifyLogin():
     csv_file = csv.reader(open("users.csv", "r"))
     while True:
+        name = input("Podaj login: ")
         for row in csv_file:
             if name == row[0]:
-                error = input("Użytkownik o takim loginie już istnieje, podaj inny login, naciśnij l: ")
-                if error == 'l':
-                    print("--------------------------")
-                register()
-            else:
-                print("--------------------------")
-                break
+                error = print("Użytkownik o takim loginie już istnieje")
+            # register()
+        else:
+            print("Login ok")
+            break
 
 
 def deleteEntry():
@@ -47,32 +97,14 @@ def deleteEntry():
         writer.writerows(rows)
 
 
-def begin():
-    global option
-    print("Witaj")
-    option = input("Zaloguj albo zarejestruj się: log/rej ")
-    if (option != "log" and option != "rej"):
-        begin()
-
-
-def access(option):
-    if (option == "log"):
-
-        login()
-
-    else:
-
-        register()
-
-
 def options():
-    print("Witamy w programie logowania\n")
-    success = True
-    while success:
+    print(islogged)
+    while islogged:
+        print("Witamy w programie logowania\n")
         print("Wybierz opcję menu lista: 1/szukaj: 2/usun: 3/zakoncz: 4\n")
         menu = int(input("podaj wybór: "))
         if menu == 1:
-            displayusers()
+            displayUsers()
         elif menu == 2:
             searchByLogin()
         elif menu == 3:
@@ -82,7 +114,7 @@ def options():
             exit()
 
 
-def displayusers():
+def displayUsers():
     data = []
     with open("users.csv") as csvfile:
         reader = csv.reader(csvfile)
@@ -92,7 +124,7 @@ def displayusers():
 
 
 def searchByLogin():
-    login = input("Podaj login do wyszukania: \n")
+    login = str(input("Podaj login do wyszukania: \n"))
     csv_file = csv.reader(open("users.csv", "r"))
     for row in csv_file:
         if login == row[0]:
@@ -102,65 +134,4 @@ def searchByLogin():
             break
 
 
-def register():
-    pattern = re.compile(r'')
-    print("Podaj login i hasło, aby się zarejestrować ")
-    name = input("Podaj login: ")
-    while True:
-        password = getpass.getpass("Podaj hasło: ")
-        if (len(password) < 6):
-            print("hasło musi mieć co najmniej 6 znaków")
-        else:
-            print("Poprawne hasło")
-            break
-    with open('users.csv', 'a', newline='') as csvfile:
-        csv_writer = csv.writer(csvfile)
-        csv_writer.writerow([name, password])
-        csvfile.close()
-    print("Zarejestrowałeś się")
-    grant()
-
-
-success = True
-
-
-def login():
-    usersInfo = {}
-    global success
-    success = False
-    name = input("Podaj login: ")
-    password = getpass.getpass("Podaj hasło: ")
-    with open('users.csv', 'r') as csvfile:
-        csv_reader = csv.reader(csvfile)
-        for line in csvfile:
-            print(line)
-            line = line.split()
-            print(line)
-            usersInfo.update({line[0]: line[1]})
-        while True:
-            name = input("Podaj login: ")
-            password = getpass.getpass("Podaj hasło: ")
-            if name not in usersInfo:
-                print("Nie jesteś zarejestrowany")
-                print()
-            else:
-                break
-        while True:
-
-            password = getpass.getpass("Podaj hasło: ")
-            if password not in usersInfo:
-                print("Błędne hasło")
-            else:
-             break
-        print("Zalogowałeś się")
-        begin()
-        access(option)
-
-
 begin()
-access(option)
-
-while success:
-    print(granted)
-    print("JESTEM W WHILE")
-    options()
