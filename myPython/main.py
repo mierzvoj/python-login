@@ -97,7 +97,7 @@ def verifyLogin(name):
                 if name == row[0]:
                     print("Użytkownik o takim loginie już istnieje")
                     print("Zarejestruj się jako nowy użytkownik o innym loginie")
-                register()
+                    register()
             break
 
 def deleteEntry():
