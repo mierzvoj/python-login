@@ -61,7 +61,7 @@ def login():
 
     while not islogged:
         userdata = []
-        with open('users.csv') as csvfile:
+        with open('users.csv', 'r') as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
                 userdata.append(row)
@@ -87,23 +87,18 @@ def login():
 
 def verifyLogin(name):
     csv_file = csv.reader(open("users.csv", "r"))
-    while True:
-        if not any(char.isdigit() for char in name):
-            register()
-            break
-        else:
-            break
-    while True:
-        for row in csv_file:
-            if name == row[0]:
-                print("Użytkownik o takim loginie już istnieje")
-                print("Zarejestruj się jako nowy użytkownik")
-                register()
-                break
-            else:
-                print("Login ok")
-                break
 
+    if not any(char.isdigit() for char in name):
+        print('Podaj choć jedną cyfrę w loginie użytkownika')
+        register()
+    else:
+        while True:
+            for row in csv_file:
+                if name == row[0]:
+                    print("Użytkownik o takim loginie już istnieje")
+                    print("Zarejestruj się jako nowy użytkownik o innym loginie")
+                register()
+            break
 
 def deleteEntry():
     member_name = input("Podaj login do usunięcia: ")
