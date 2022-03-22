@@ -8,6 +8,9 @@ import re
 import getpass
 
 
+
+
+
 def run():
     if __name__ == '__main__': run()
 
@@ -27,9 +30,11 @@ def begin():
 
 def register():
     global islogged
+    global name
     pattern = re.compile(r'')
     print("Podaj login i hasło, aby się zarejestrować ")
-    name = input("Podaj login: ")
+    name = input("Podaj login 1: ")
+    verifyLogin()
     while True:
         password = getpass.getpass("Podaj hasło: ")
         if (len(password) < 6):
@@ -56,30 +61,41 @@ def login():
     print("tu login")
     global islogged
     islogged = False
-    name = input("Podaj login: ")
-    password = getpass.getpass("Podaj hasło: ")
     with open('users.csv', 'r') as csvfile:
         csv_reader = csv.reader(csvfile)
-        for row in csv_reader:
-            if row[0] == name and row[1] == password:
-                csvfile.close()
-                print("Zalogowałeś się")
-                islogged = True
-                options()
-                break
+        while True:
+            name = input("Podaj swój login: ").title()
+            for row in csv_reader:
+              if row[0] != name:
+                print("Nie jesteś zarejestrowany")
+                print()
             else:
-                print("Błędny login lub hasło")
-                begin()
+                break
+            break
+        while True:
+            password = getpass.getpass("Podaj hasło: ")
+            for row in csv_reader:
+                if row[0] != password:
+                    print("Hasło niepoprawne")
+                    print()
+            else:
+                break
+            break
 
+        print()
+        print("Zalogowany")
+        islogged = True
+        options()
 
 def verifyLogin():
     csv_file = csv.reader(open("users.csv", "r"))
     while True:
-        name = input("Podaj login: ")
         for row in csv_file:
             if name == row[0]:
-                error = print("Użytkownik o takim loginie już istnieje")
-            # register()
+                print("Użytkownik o takim loginie już istnieje")
+            break
+            print("Zarejestruj się jako nowy użytkownik")
+            register()
         else:
             print("Login ok")
             break
@@ -109,7 +125,7 @@ def options():
             searchByLogin()
         elif menu == 3:
             deleteEntry()
-            print("blob")
+            print("Wybrany użytkownik został usunięty z rejestru")
         else:
             exit()
 
@@ -129,9 +145,10 @@ def searchByLogin():
     for row in csv_file:
         if login == row[0]:
             print(row)
-        else:
-            print("--------------------------")
             break
+        else:
+            print("---------nie znaleziono----------")
+
 
 
 begin()
