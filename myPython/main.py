@@ -8,9 +8,6 @@ import re
 import getpass
 
 
-
-
-
 def run():
     if __name__ == '__main__': run()
 
@@ -33,27 +30,27 @@ def register():
     global name
     pattern = re.compile(r'')
     print("Podaj login i hasło, aby się zarejestrować ")
-    name = input("Podaj login 1: ")
-    verifyLogin()
+    name = input("Podaj login w register: ")
+    verifyLogin(name)
     while True:
         password = getpass.getpass("Podaj hasło: ")
         if (len(password) < 6):
             while True:
-              print("hasło musi mieć co najmniej 6 znaków")
-              password = getpass.getpass("Podaj hasło: ")
-              if(len(password) >= 6):
-                break
-              else:
                 print("hasło musi mieć co najmniej 6 znaków")
+                password = getpass.getpass("Podaj hasło: ")
+                if (len(password) >= 6 and any(char.isdigit() for char in password)):
+                    break
+                else:
+                    print("hasło musi mieć co najmniej 6 znaków")
         else:
             print("Poprawne hasło")
         break
     with open('users.csv', 'a', newline='') as csvfile:
-      csv_writer = csv.writer(csvfile)
-      csv_writer.writerow([name, password])
-      csvfile.close()
-      print("Zarejestrowałeś się")
-      islogged = True
+        csv_writer = csv.writer(csvfile)
+        csv_writer.writerow([name, password])
+        csvfile.close()
+        print("Zarejestrowałeś się")
+        islogged = True
     options()
 
 
@@ -61,44 +58,51 @@ def login():
     print("tu login")
     global islogged
     islogged = False
-    with open('users.csv', 'r') as csvfile:
-        csv_reader = csv.reader(csvfile)
-        while True:
-            name = input("Podaj swój login: ").title()
-            for row in csv_reader:
-              if row[0] != name:
-                print("Nie jesteś zarejestrowany")
-                print()
-            else:
-                break
-            break
-        while True:
-            password = getpass.getpass("Podaj hasło: ")
-            for row in csv_reader:
-                if row[0] != password:
-                    print("Hasło niepoprawne")
-                    print()
-            else:
-                break
-            break
 
-        print()
-        print("Zalogowany")
-        islogged = True
-        options()
+    while not islogged:
+        userdata = []
+        with open('users.csv') as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                userdata.append(row)
+        print(userdata[2])
+        name = input('Podaj swój login: ')
+        password = input('Podaj swoje hasło ')
+        col0 = [x[0] for x in userdata]
+        col1 = [x[1] for x in userdata]
+        print("tu kolumny po kolei")
+        print(col0)
+        print(col1)
+        if name in col0:
+            for k in range(0, len(col0)):
+                if col0[k] == name and col1[k] == password:
+                    print("Zalogowałeś się ")
+                    islogged = True
+        else:
+            print('Nieprawidłowy login lub hasło')
+            print('Spróbuj się zarejestrować')
+            register()
+    options()
 
-def verifyLogin():
+
+def verifyLogin(name):
     csv_file = csv.reader(open("users.csv", "r"))
+    while True:
+        if not any(char.isdigit() for char in name):
+            register()
+            break
+        else:
+            break
     while True:
         for row in csv_file:
             if name == row[0]:
                 print("Użytkownik o takim loginie już istnieje")
-            break
-            print("Zarejestruj się jako nowy użytkownik")
-            register()
-        else:
-            print("Login ok")
-            break
+                print("Zarejestruj się jako nowy użytkownik")
+                register()
+                break
+            else:
+                print("Login ok")
+                break
 
 
 def deleteEntry():
@@ -148,7 +152,6 @@ def searchByLogin():
             break
         else:
             print("---------nie znaleziono----------")
-
 
 
 begin()
