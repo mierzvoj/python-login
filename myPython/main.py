@@ -11,6 +11,13 @@ import getpass
 def run():
     if __name__ == '__main__': run()
 
+def check_db_exists(path):
+        try:
+            os.stat(path)
+        except FileNotFoundError:
+            f = open(path, "#")
+            f.close()
+
 
 def begin():
     global option
@@ -28,20 +35,20 @@ def begin():
 def register():
     global islogged
     global name
-    pattern = re.compile(r'')
+    pattern = r'^[A-Z]{3}'
     print("Podaj login i hasło, aby się zarejestrować ")
-    name = input("Podaj login w register: ")
+    name = input("Podaj login w register, login musi zaczynać się trzema wielkimi literami i mieć jedną cyfrę: ")
     verifyLogin(name)
     while True:
-        password = getpass.getpass("Podaj hasło: ")
+        password = getpass.getpass("Podaj hasło o długości co najmniej 6 znaków z jedną cyfrą: ")
         if (len(password) < 6):
-            while True:
+
+            print("Hasło musi mieć co najmniej 6 znaków i jedną cyfrę")
+            password = getpass.getpass("Podaj hasło: ")
+            if len(password) >= 6 and any(char.isdigit() for char in password and re.match(pattern, password)):
+                break
+            else:
                 print("hasło musi mieć co najmniej 6 znaków")
-                password = getpass.getpass("Podaj hasło: ")
-                if (len(password) >= 6 and any(char.isdigit() for char in password)):
-                    break
-                else:
-                    print("hasło musi mieć co najmniej 6 znaków")
         else:
             print("Poprawne hasło")
         break
@@ -65,7 +72,6 @@ def login():
             reader = csv.reader(csvfile)
             for row in reader:
                 userdata.append(row)
-        print(userdata[2])
         name = input('Podaj swój login: ')
         password = input('Podaj swoje hasło ')
         col0 = [x[0] for x in userdata]
@@ -100,20 +106,19 @@ def verifyLogin(name):
                     register()
             break
 
+
 def deleteEntry():
     member_name = input("Podaj login do usunięcia: ")
-
     with open('users.csv', 'r+') as in_file:
-        reader = csv.reader(in_file)
+        # reader = csv.reader(in_file)
         rows = [row for row in csv.reader(in_file) if member_name not in row]
         in_file.seek(0)
-        in_file.truncate()
+        # in_file.truncate()
         writer = csv.writer(in_file)
         writer.writerows(rows)
 
 
 def options():
-    print(islogged)
     while islogged:
         print("Witamy w programie logowania\n")
         print("Wybierz opcję menu lista: 1/szukaj: 2/usun: 3/zakoncz: 4\n")
