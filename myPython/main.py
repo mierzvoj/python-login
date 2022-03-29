@@ -104,7 +104,7 @@ def verifyLogin(name):
 
 def deleteEntry():
     member_name = input("Podaj login do usunięcia: ")
-    with open('users.csv', 'r+') as in_file:
+    with open('users.csv', 'r+', newline='') as in_file:
         # reader = csv.reader(in_file)
         rows = [row for row in csv.reader(in_file) if member_name not in row]
         in_file.seek(0)
