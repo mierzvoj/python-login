@@ -124,7 +124,7 @@ def options():
             searchByLogin()
         elif menu == 3:
             deleteEntry()
-            print("Wybrany użytkownik został usunięty z rejestru")
+            print("Wybrany użytkownik został usunięty z rejestru, tej operacji nie można odwrócić")
         else:
             exit()
 
