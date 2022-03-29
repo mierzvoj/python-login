@@ -73,7 +73,7 @@ def login():
             for row in reader:
                 userdata.append(row)
         name = input('Podaj swój login: ')
-        password = input('Podaj swoje hasło ')
+        password = getpass.getpass('Podaj swoje hasło ')
         col0 = [x[0] for x in userdata]
         col1 = [x[1] for x in userdata]
         print("tu kolumny po kolei")
