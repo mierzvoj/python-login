@@ -11,12 +11,13 @@ import getpass
 def run():
     if __name__ == '__main__': run()
 
+
 def check_db_exists(path):
-        try:
-            os.stat(path)
-        except FileNotFoundError:
-            f = open(path, "#")
-            f.close()
+    try:
+        os.stat(path)
+    except FileNotFoundError:
+        f = open(path, "#")
+        f.close()
 
 
 def begin():
@@ -41,17 +42,11 @@ def register():
     verifyLogin(name)
     while True:
         password = getpass.getpass("Podaj hasło o długości co najmniej 6 znaków z jedną cyfrą: ")
-        if (len(password) < 6):
-
-            print("Hasło musi mieć co najmniej 6 znaków i jedną cyfrę")
-            password = getpass.getpass("Podaj hasło: ")
-            if len(password) >= 6 and any(char.isdigit() for char in password and re.match(pattern, password)):
-                break
-            else:
-                print("hasło musi mieć co najmniej 6 znaków")
-        else:
+        if len(password) >= 6 and any(char.isdigit() for char in password):
             print("Poprawne hasło")
-        break
+            break
+        else:
+            print("hasło musi mieć co najmniej 6 znaków i jedną cyfrę")
     with open('users.csv', 'a', newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
         csv_writer.writerow([name, password])
