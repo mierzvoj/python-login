@@ -1,10 +1,6 @@
 import sys
 import os
 import csv
-from csv import writer
-import userlogin
-import userregister
-import re
 import getpass
 
 
@@ -24,13 +20,17 @@ def begin():
     global option
     print("Witaj")
     while True:
-        option = int(input("Zaloguj albo zarejestruj się: 1 lub 2 "))
-        if option in ['1', '2']:
+        try:
+            option = int(input("Zaloguj albo zarejestruj się: 1 lub 2 "))
+            if option in ['1', '2']:
+                break
+            if option == 1:
+                login()
+            else:
+                register()
+        except:
+            print("Zacznij od nowa")
             break
-        if option == 1:
-            login()
-        else:
-            register()
 
 
 def register():
@@ -57,7 +57,6 @@ def register():
 
 
 def login():
-    print("tu login")
     global islogged
     islogged = False
 
@@ -71,9 +70,6 @@ def login():
         password = getpass.getpass('Podaj swoje hasło ')
         col0 = [x[0] for x in userdata]
         col1 = [x[1] for x in userdata]
-        print("tu kolumny po kolei")
-        print(col0)
-        print(col1)
         if name in col0:
             for k in range(0, len(col0)):
                 if col0[k] == name and col1[k] == password:
@@ -105,10 +101,8 @@ def verifyLogin(name):
 def deleteEntry():
     member_name = input("Podaj login do usunięcia: ")
     with open('users.csv', 'r+', newline='') as in_file:
-        # reader = csv.reader(in_file)
         rows = [row for row in csv.reader(in_file) if member_name not in row]
         in_file.seek(0)
-        # in_file.truncate()
         writer = csv.writer(in_file)
         writer.writerows(rows)
 
