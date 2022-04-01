@@ -8,12 +8,7 @@ def run():
     if __name__ == '__main__': run()
 
 
-def check_db_exists(path):
-    try:
-        os.stat(path)
-    except FileNotFoundError:
-        f = open(path, "#")
-        f.close()
+
 
 
 def begin():
@@ -59,7 +54,6 @@ def register():
 def login():
     global islogged
     islogged = False
-
     while not islogged:
         userdata = []
         with open('users.csv', 'r') as csvfile:
@@ -84,7 +78,6 @@ def login():
 
 def verifyLogin(name):
     csv_file = csv.reader(open("users.csv", "r"))
-
     if not any(char.isdigit() for char in name):
         print('Podaj choć jedną cyfrę w loginie użytkownika')
         register()
